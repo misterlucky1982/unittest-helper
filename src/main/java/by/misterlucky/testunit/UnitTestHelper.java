@@ -44,7 +44,7 @@ public class UnitTestHelper {
 
 	private static final int PRIVATE = 2;
 
-	public void testAsClassicPojo(Class<?> clazz) throws Exception {
+	public static void testAsClassicPojo(Class<?> clazz) throws Exception {
 		assertAllDeclaredFieldsPrivateAndNotStatic(clazz);
 		getSetTestForAllFields(clazz);
 	}
