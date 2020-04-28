@@ -2,6 +2,7 @@ package by.misterlucky.testunit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class UnitTestHelper {
 	private static final String DOUBLEWRAPPER = "java.lang.Double";
 	private static final String CHARWRAPPER = "java.lang.Character";
 	private static final String BOOLEANWRAPPER = "java.lang.Boolean";
+	private static final String SQLDATE = "java.sql.Date";
 
 	private static final Set<String> SIMPLETYPES = new HashSet<>();
 	static {
@@ -140,6 +142,10 @@ public class UnitTestHelper {
 				testCharWrapperField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
 						methods.get("SET" + f.getName().toUpperCase()));
 				break;
+			case SQLDATE:
+				testSqlDateField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
+						methods.get("SET" + f.getName().toUpperCase()));
+				break;
 			default:
 				testFieldAsOthersType(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
 						methods.get("SET" + f.getName().toUpperCase()));
@@ -176,6 +182,20 @@ public class UnitTestHelper {
 
 	protected static boolean isSimpleType(Field field) {
 		return SIMPLETYPES.contains(field.getType().getCanonicalName());
+	}
+	
+	private static void testSqlDateField(Class<?> clazz, Field field, Method getter, Method setter)
+			throws Exception {
+		checkGetterSetterArePresent(field, getter, setter);
+		Object ob = clazz.newInstance();
+		if (getter.invoke(ob) != null) {
+			throw invalidInitialization(field);
+		}
+		java.sql.Date date = new Date((long)(Math.random()*Long.MAX_VALUE));
+		setter.invoke(ob, date);
+		if (!date.equals(getter.invoke(ob))) {
+			throw new AssertionFailedError("Unaccepted setter`s behavior for field : " + field.getName());
+		}
 	}
 
 	private static void testBooleanSimpleTypeField(Class<?> clazz, Field field, Method getter, Method setter)
