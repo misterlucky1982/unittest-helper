@@ -44,8 +44,6 @@ public class UnitTestHelper {
 		SIMPLETYPES.addAll(Arrays.asList("boolean", "byte", "short", "float", "double", "int", "long", "char"));
 	}
 
-	private static final int PRIVATE = 2;
-
 	public static void testAsClassicPojo(Class<?> clazz) throws Exception {
 		assertAllDeclaredFieldsPrivateAndNotStatic(clazz);
 		getSetTestForAllFields(clazz);
@@ -53,6 +51,101 @@ public class UnitTestHelper {
 
 	public static void getSetTestForAllFields(Class<?> clazz) throws Exception {
 		getSetTestForAllFieldsExcept(clazz);
+	}
+
+	public static void getSetTestForAllFields(Class<?>... classes) throws Exception {
+		for (Class<?> clazz : classes) {
+			getSetTestForAllFieldsExcept(clazz);
+		}
+	}
+
+	protected static void getSetTestForField(Class<?> clazz, Map<String, Method> methods, Field field)
+			throws Exception {
+		switch (field.getType().getName()) {
+		case BOOLEAN:
+			testBooleanSimpleTypeField(clazz, field, methods.get("IS" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case BYTE:
+			testByteSimpleTypeField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case SHORT:
+			testShortSimpleTypeField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case FLOAT:
+			testFloatSimpleTypeField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case DOUBLE:
+			testDoubleSimpleTypeField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case INT:
+			testIntSimpleTypeField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case LONG:
+			testLongSimpleTypeField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case CHAR:
+			testCharSimpleTypeField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case STRING:
+			testStringField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case LIST:
+			testListField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case SET:
+			testSetField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case QUEUE:
+			testQueueField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case MAP:
+			testMapField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case BOOLEANWRAPPER:
+			testBooleanWrapperField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case BYTEWRAPPER:
+			testByteWrapperField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case INTWRAPPER:
+			testIntWrapperField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case LONGWRAPPER:
+			testLongWrapperField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case DOUBLEWRAPPER:
+			testDoubleWrapperField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case CHARWRAPPER:
+			testCharWrapperField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		case SQLDATE:
+			testSqlDateField(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+			break;
+		default:
+			testFieldAsOthersType(clazz, field, methods.get("GET" + field.getName().toUpperCase()),
+					methods.get("SET" + field.getName().toUpperCase()));
+		}
 	}
 
 	public static void getSetTestForAllFieldsExcept(Class<?> clazz, String... fields) throws Exception {
@@ -65,93 +158,28 @@ public class UnitTestHelper {
 			if (exceptFields.contains(f.getName())) {
 				continue;
 			}
-			switch (f.getType().getName()) {
-			case BOOLEAN:
-				testBooleanSimpleTypeField(clazz, f, methods.get("IS" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case BYTE:
-				testByteSimpleTypeField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case SHORT:
-				testShortSimpleTypeField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case FLOAT:
-				testFloatSimpleTypeField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case DOUBLE:
-				testDoubleSimpleTypeField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case INT:
-				testIntSimpleTypeField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case LONG:
-				testLongSimpleTypeField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case CHAR:
-				testCharSimpleTypeField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case STRING:
-				testStringField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case LIST:
-				testListField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case SET:
-				testSetField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case QUEUE:
-				testQueueField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case MAP:
-				testMapField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case BOOLEANWRAPPER:
-				testBooleanWrapperField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case BYTEWRAPPER:
-				testByteWrapperField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case INTWRAPPER:
-				testIntWrapperField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case LONGWRAPPER:
-				testLongWrapperField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case DOUBLEWRAPPER:
-				testDoubleWrapperField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case CHARWRAPPER:
-				testCharWrapperField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			case SQLDATE:
-				testSqlDateField(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-				break;
-			default:
-				testFieldAsOthersType(clazz, f, methods.get("GET" + f.getName().toUpperCase()),
-						methods.get("SET" + f.getName().toUpperCase()));
-			}
+			getSetTestForField(clazz, methods, f);
 		}
 
+	}
+	
+	public static void getSetTestForAllPrivateNonStaticFields(Class<?>... classes) throws Exception {
+		for (Class<?> clazz : classes) {
+			getSetTestForAllPrivateNonStaticFields(clazz);
+		}
+	}
+
+	public static void getSetTestForAllPrivateNonStaticFields(Class<?> clazz) throws Exception {
+		Map<String, Method> methods = new HashMap<>();
+		for (Method m : clazz.getMethods()) {
+			methods.put(m.getName().toUpperCase(), m);
+		}
+		for (Field f : clazz.getDeclaredFields()) {
+			if (f.getModifiers() != Modifiers.PRIVATE) {
+				continue;
+			}
+			getSetTestForField(clazz, methods, f);
+		}
 	}
 
 	public static void getSetForFieldWithGivenInstanceToSet(Class<?> clazz, String fieldName, Object instance)
@@ -173,7 +201,7 @@ public class UnitTestHelper {
 
 	public static void assertAllDeclaredFieldsPrivateAndNotStatic(Class<?> clazz) {
 		for (Field f : clazz.getDeclaredFields()) {
-			if (f.getModifiers() != PRIVATE) {
+			if (f.getModifiers() != Modifiers.PRIVATE) {
 				throw new AssertionFailedError(
 						"the class " + clazz.getCanonicalName() + " has field with unallowed modifier");
 			}
@@ -183,15 +211,14 @@ public class UnitTestHelper {
 	protected static boolean isSimpleType(Field field) {
 		return SIMPLETYPES.contains(field.getType().getCanonicalName());
 	}
-	
-	private static void testSqlDateField(Class<?> clazz, Field field, Method getter, Method setter)
-			throws Exception {
+
+	private static void testSqlDateField(Class<?> clazz, Field field, Method getter, Method setter) throws Exception {
 		checkGetterSetterArePresent(field, getter, setter);
 		Object ob = clazz.newInstance();
 		if (getter.invoke(ob) != null) {
 			throw invalidInitialization(field);
 		}
-		java.sql.Date date = new Date((long)(Math.random()*Long.MAX_VALUE));
+		java.sql.Date date = new Date((long) (Math.random() * Long.MAX_VALUE));
 		setter.invoke(ob, date);
 		if (!date.equals(getter.invoke(ob))) {
 			throw new AssertionFailedError("Unaccepted setter`s behavior for field : " + field.getName());
